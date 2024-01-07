@@ -4,7 +4,7 @@ This lib is my own one for making projects. I don't mean that it's an alternativ
 ---
 # Modules
 There are just two modules at the moment and each of them is located in the tc namespace (means TophCore lib). There is hierarchy of the library:
-+ Algorithms
++ algorithms
   + DataStructure
     + LinearDataStructure
       + Stack
@@ -14,8 +14,10 @@ There are just two modules at the moment and each of them is located in the tc n
       + List
     + Vector
     + Pair
-+ Time
++ time
   + ClockTime
++ string
+  + String
 ---
 # License
 MIT

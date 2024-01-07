@@ -62,44 +62,67 @@ long ClockTime::to_hours() const
 // Recalculates the whole time and puts according values
 void ClockTime::recalculate()
 {
-    if (seconds >= 60)
+    if (seconds >= 0)
     {
-        minutes += seconds / 60;
-        seconds %= 60;
-    }
+        if (seconds >= 60)
+        {
+            minutes += seconds / 60;
+            seconds %= 60;
+        }
 
-    if (minutes >= 60)
-    {
-        hours += minutes / 60;
-        minutes %= 60;
-    }
+        if (minutes >= 60)
+        {
+            hours += minutes / 60;
+            minutes %= 60;
+        }
 
-    if (hours >= 24)
+        if (hours >= 24)
+        {
+            days += hours / 24;
+            hours %= 24;
+        }
+    }
+    else
     {
-        days += hours / 24;
-        hours %= 24;
+        if (seconds <= -60)
+        {
+            minutes += seconds / 60;
+            seconds %= 60;
+        }
+
+        if (minutes <= -60)
+        {
+            hours += minutes / 60;
+            minutes %= 60;
+        }
+
+        if (hours <= -24)
+        {
+            days += hours / 24;
+            hours %= 24;
+        }
     }
 }
 
 
 void ClockTime::add_seconds(long long seconds)
 {
-    this->seconds += seconds;
+    reset(to_seconds() + seconds);
     recalculate();
 }
 void ClockTime::add_minutes(long minutes)
 {
-    this->minutes += minutes;
+    reset(to_seconds() + minutes * 60);
     recalculate();
 }
 void ClockTime::add_hours(long hours)
 {
-    this->hours += hours;
+    reset(to_seconds() + hours * 3600);
     recalculate();
 }
 void ClockTime::add_days(long days)
 {
-    this->days += days;
+    reset(to_seconds() + days * 216000);
     recalculate();
 }
 
@@ -113,16 +136,51 @@ void ClockTime::reset(long long seconds, long minutes, long hours, long days)
     this->days = days;
 }
 
+const ClockTime& ClockTime::operator+(const ClockTime &time) const
+{
+    ClockTime *temp_time = new ClockTime(this->seconds, this->minutes, this->hours, this->days);
+    *temp_time += time;
+    return *temp_time;
+}
+const ClockTime& ClockTime::operator-(const ClockTime &time) const
+{
+    ClockTime *temp_time = new ClockTime(this->seconds, this->minutes, this->hours, this->days);
+    *temp_time -= time;
+    return *temp_time;
+}
+const ClockTime& ClockTime::operator*(float k) const
+{
+    ClockTime *temp_time = new ClockTime(this->seconds, this->minutes, this->hours, this->days);
+    *temp_time *= k;
+    return *temp_time;
+}
+
 const ClockTime& ClockTime::operator*=(float k)
 {
     seconds = to_seconds();
     seconds *= k;
     recalculate();
+    return *this;
 }
+
 const ClockTime& ClockTime::operator/=(float k)
 {
     seconds = to_seconds();
     seconds /= k;
     recalculate();
+    return *this;
 }
 
+const ClockTime& ClockTime::operator+=(const ClockTime &time)
+{
+    this->seconds += time.to_seconds();
+    recalculate();
+    return *this;
+}
+
+const ClockTime& ClockTime::operator-=(const ClockTime &time)
+{
+    this->reset(this->to_seconds() - time.to_seconds());
+    recalculate();
+    return *this;
+}

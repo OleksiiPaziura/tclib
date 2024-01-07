@@ -10,8 +10,8 @@ namespace tc
     private:
         long long seconds;
         long minutes,
-                hours,
-                days;
+             hours,
+             days;
 
         void recalculate();
 
@@ -38,21 +38,24 @@ namespace tc
         { return days; }
 
         void add_seconds(long long seconds);
-
         void add_minutes(long minutes);
-
         void add_hours(long hours);
-
         void add_days(long days);
-
         void reset(long long seconds = 0,
                    long minutes = 0,
                    long hours = 0,
                    long days = 0);
 
-        const ClockTime &operator*=(float k);
+        const ClockTime &operator+(const ClockTime &time) const;
+        const ClockTime &operator-(const ClockTime &time) const;
+        const ClockTime &operator*(float k) const;
+        inline friend const ClockTime &operator*(float k, const ClockTime &time)
+        { return time * k; }
 
+        const ClockTime &operator*=(float k);
         const ClockTime &operator/=(float k);
+        const ClockTime &operator+=(const ClockTime &time);
+        const ClockTime &operator-=(const ClockTime &time);
     };
 }
 
