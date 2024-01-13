@@ -26,4 +26,4 @@ There are just two modules at the moment and each of them is located in the tc n
   + String
 ---
 # License
-MIT
+BSD-3-Clause license
